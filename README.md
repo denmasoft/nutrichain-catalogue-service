@@ -38,31 +38,27 @@ This service is designed as a **stateless resource server** within a microservic
 
 ## Setup & Installation
 
-1.  **Clone the Repository**
-    ```bash
-    git clone <your-repo-url>
-    cd <repository-folder>/catalogo
-    ```
+1.  **Clone this Repository**
 
 2.  **Configure Environment Variables**
-    Copy the `app/config/parameters.yml.dist` to `app/config/parameters.yml` and fill in your database credentials, Redis connection details, and JWT pass-phrase.
+    Copy the `app/config/parameters.yml.dist` to `app/config/parameters.yml` and fill in database credentials, Redis connection details, and JWT pass-phrase.
 
     ```yaml
     # app/config/parameters.yml
     parameters:
         database_driver: pdo_pgsql
-        database_host: your_db_host
+        database_host: db_host
         database_port: 5432
-        database_name: your_db_name
-        database_user: your_db_user
-        database_password: your_db_password
+        database_name: db_name
+        database_user: db_user
+        database_password: db_password
 
         redis_host: localhost
         redis_port: 6379
 
         jwt_private_key_path: '%kernel.root_dir%/var/jwt/private.pem'
         jwt_public_key_path:  '%kernel.root_dir%/var/jwt/public.pem'
-        jwt_key_pass_phrase:  'your_secret_passphrase'
+        jwt_key_pass_phrase:  'secret_passphrase'
         jwt_token_ttl:        3600 # 1 hour
     ```
 
@@ -71,7 +67,7 @@ This service is designed as a **stateless resource server** within a microservic
     ```bash
     mkdir -p app/var/jwt
     openssl genrsa -out app/var/jwt/private.pem -aes256 4096
-    # Enter your chosen passphrase here
+    # Enter chosen passphrase here
 
     openssl rsa -pubout -in app/var/jwt/private.pem -out app/var/jwt/public.pem
     # Enter the passphrase again to export the public key
@@ -93,7 +89,7 @@ This service is designed as a **stateless resource server** within a microservic
 5.  **Setup the Database**
     Create the database schema and load initial test data.
     ```bash
-    # From within the container or your local machine with php-cli
+    # From within the container or local machine with php-cli
     php app/console doctrine:schema:update --force
     php app/console doctrine:fixtures:load --no-interaction
     ```
@@ -107,7 +103,7 @@ The entire application stack can be launched using Docker Compose from the proje
 docker-compose up -d catalogo
 ```
 
-The Catalogue microservice will be available at http://localhost:8081 (or as configured in your docker-compose.yml).
+The Catalogue microservice will be available at http://localhost:8081 (or as configured in docker-compose.yml).
 
 
 ## API Documentation
@@ -117,7 +113,7 @@ API documentation is automatically generated and available at /api/doc.
 URL: http://localhost:8081/api/doc
 Access: This endpoint is protected and requires a valid JWT with the ROLE_ADMIN claim. You can generate a test admin token using the following command:
 ```bash
-# From within the container or your local machine
+# From within the container or local machine
 php app/console lexik:jwt:generate-token admin --roles=ROLE_ADMIN
 ```
 
@@ -134,6 +130,6 @@ Use the generated token in the Authorization header field of the API documentati
 
 To run the PHPUnit test suite:
 ```bash 
-# From within the container or your local machine
+# From within the container or local machine
 ./bin/phpunit
 ```
