@@ -1,0 +1,35 @@
+# Learn more about services, parameters and containers at
+# https://symfony.com/doc/current/service_container.html
+parameters:
+    #parameter_name: value
+
+services:
+    #service_name:
+    #    class: AppBundle\Directory\ClassName
+    #    arguments: ['@another_service_name', 'plain_value', '%parameter_name%']
+  app.product_service:
+    class: ProductBundle\Service\ProductService
+    arguments: ["@doctrine.orm.entity_manager", "@validator", "@translator.default"]
+  redis.client:
+    class: Predis\Client
+    arguments:
+      - "tcp://%redis_host%:%redis_port%"
+
+  app.listener.rate_limiter:
+    class: ProductBundle\EventListener\RateLimiterListener
+    arguments:
+      - "@redis.client"
+      - "@translator.default"
+      - "@security.token_storage"
+      - "%rate_limit_auth%"
+      - "%rate_limit_anon%"
+      - "%rate_limit_period%"
+    tags:
+      - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 200 }
+
+
+  app.subscriber.idempotency:
+    class: AppBundle\EventListener\IdempotencyListener
+    arguments: [ "@redis.client" ]
+    tags:
+      - { name: kernel.event_subscriber }

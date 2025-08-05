@@ -1,0 +1,3 @@
+product.not_found: "Producto con ID %id% no encontrado."
+product.created: "Producto creado exitosamente."
+error.rate_limit_exceeded: "Has excedido el límite de peticiones. Por favor, inténtalo de nuevo más tarde."

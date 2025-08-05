@@ -1,0 +1,20 @@
+# To get started with security, check out the documentation:
+# https://symfony.com/doc/current/security.html
+security:
+    providers:
+        in_memory: { memory: null }
+    firewalls:
+        public:
+            pattern: ^/health
+            security: false
+        api:
+            pattern: ^/api
+            stateless: true
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
+
+    access_control:
+        - { path: ^/health, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/doc, roles: ROLE_ADMIN }
+        - { path: ^/api,       roles: ROLE_USER }
